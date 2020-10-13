@@ -1,0 +1,89 @@
+STEPS TO IMPLEMENT ASSIGNMENT-3-Magento Theme Development and Customization
+
+1. Create a category and simple product
+-->Go to localhost/<your theme dir>/admin,admin Catalog->Category->Add sub Category.
+-->Go to localhost/<your theme dir>/admin,admin Catalog->Products->Add new product->Simple product.
+
+2. Change currency to INR
+-->Go to localhost/<your theme dir>/admin,Stores->Configuration->General->Currency Setup->Curreny options->Base currency(INR),Display currency(INR),Allowed currency(INR).
+
+3. Change the timezone to India
+-->Go to localhost/<your theme dir>/admin,Stores->Configuration->General->general->locale options->Time zone.
+
+4. Create custom theme - Use luma theme as base theme
+->a) Create a directory for the theme under app/design/frontend/<your_vendor_name>/<your_theme_name>
+->b) Add 3 files theme.xml,composer.json,registration.php
+NOTE:Make sure that all the 3 files are overriding magento/luma
+Run the elasticsearch batch file and in the magento command prompt run the following commands:
+php bin/magento deploy:mode:set developer
+php bin/magento indexer:reindex
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy -f
+php bin/magento cache:flush
+->Go to admin panel Content->Design->Configuration->Select the last option from the table and select edit->from the dropdown select your registered theme->save configuration
+Run localhost/<your_vendor_name> a replication of the magento luma will be displayed if all the steps mentioned above are executed correctly.
+
+5. In the custom theme - Override styles
+- Button and Link color to be changed from blue to purple (spurtree logo color) - Overall website
+->a)To override the parent theme go to vendor/magento/theme frontend luma/web/css/source/__theme.less,copy the __theme.less file.
+->b)Go to app/design/frontend/<your_vendor_name>/<your_theme_name>/web/css/source/paste the copies __theme.less file in this location.
+->c)To change the color of link and button throughout the website,open your __theme.less file
+In the section where it shows "// primary buttons" replace the block of code with the code below:
+Replace @color-orange-red1 with #884EA0.
+@button-primary__background: @color-orange-red1;
+@button-primary__border: 1px solid @color-orange-red2;
+@button-primary__color: @color-white;
+@button-primary__hover__background: darken(@color-orange-red1, 5%);
+@button-primary__hover__border: 1px solid @color-orange-red2;
+@button-primary__hover__color: @color-white;
+
+In the section where it shows "// links" replace the block of code with the code below:
+@link__color: #884EA0;
+
+6. In header - Change the logo - Use Spurtree logo
+->To change the logo go to admin panel,contents->design->configuration->->select your theme and click on edit->header->add image.
+
+7. In header - Change the logo position in the header - Horizontal Align it to the center
+->To align the logo go to your __theme.less file and add the code below:
+//  logo
+.logo{
+	position:relative;
+	left:50%;
+	transform:translateX(-50%);
+}
+ @media only screen and (max-width:450px){
+ .logo{
+ position:relative;
+	left:30%;
+	transform:translateX(-30%);
+ }
+ }
+
+8. In header - Change the cart icon in the header
+->To change cart icon:
+First add the below code to __theme.less file:
+.minicart-wrapper .showcart::before{
+	content: "" !important;
+	background: url(https://www.svgrepo.com/show/267214/handbag.svg) no-repeat;
+	width: 27px;
+	height: 25px;
+	padding-left:37px !important;
+}
+Within the url give the url of your icon.
+
+9. In Product Detail - Change "Add To Cart" button text to "Add to Bag"
+->Go to vendor/magento/module-catalog, copy all the contents of module-catalog
+->Create a directory under your theme name called "Module_Catalog" and go down the path templates\product\view
+Here look for file addtocart, in this file look for $t('Add to Cart') and replace with $t('Add to Bag')
+->Go down the path Magento_Catalog/templates/product/listing.phtml in this file look for $t('Add to Cart') and replace with $t('Add to Bag').
+
+10. In Product Detail - Swap positioning of gallery and product details
+- Move image gallery to the right and the product details section to the left
+
+
+Save all the changes made and run the following commands after every change:
+php bin/magento indexer:reindex
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy -f
+php bin/magento cache:flush
+NOTE:Make sure elasticsearch is on while running the above commands
