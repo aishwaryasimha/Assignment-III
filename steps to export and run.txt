@@ -1,0 +1,9 @@
+STEPS TO EXPORT AND RUN THE PROJECT:
+
+1.Extract all the files to your localhost within a folder 'magento'
+2.Create a database 'magento' Import the database CSV to the same DB.
+3.Run it on localhost by giving 'http://localhost/magento/'
+4.Run it on localhost by giving 'http://localhost/magento/admin' for the admin panel
+The credentials for admin panel are:
+Username:admin
+Password:admin123
